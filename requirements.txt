@@ -20,3 +20,4 @@ gluonts
 jupyterlab
 finnhub-python
 flask
+spacytextblob
