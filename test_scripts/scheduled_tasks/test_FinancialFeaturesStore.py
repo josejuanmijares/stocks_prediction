@@ -34,8 +34,8 @@ class TestFinancialFeaturesStore(unittest.TestCase):
     def test_get_market_news(self):
 
         raw_list_dict = []
-        raw_list_dict = self.conn.get_market_news()
-        print(raw_list_dict)
+        raw_list_dict, _ = self.conn.get_market_news()
+        self.assertTrue(isinstance(raw_list_dict, list))
 
 
 if __name__ == '__main__':
