@@ -32,7 +32,7 @@ class HighFrequencyFinancials:
 
         return temp_dict, recommended_freq
 
-    def get_company_news(self, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
+    def get_company_news(self, company=None, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
         '''
         This function collects company news, and it has acess to 1 year of historical data.
         '''
@@ -41,7 +41,7 @@ class HighFrequencyFinancials:
                      datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 
         raw_list_dict = self.fh_client.company_news(
-            symbol=self.company,
+            symbol=self.company if company is None else company,
             _from=_from if _from else yesterday,
             to=_to if _to else today
         )
@@ -69,9 +69,18 @@ class HighFrequencyFinancials:
         '''
         This function collects company news, and it has acess to 1 year of historical data.
         '''
-        raw_list_dict = self.fh_client.general_news('general')
 
         temp_news_vector = []
+        raw_list_dict = []
+        if ('all' in markets) or ('general' in markets):
+            raw_list_dict.extend(self.fh_client.general_news('general'))
+        if ('all' in markets) or ('forex' in markets):
+            raw_list_dict.extend(self.fh_client.general_news('forex'))
+        if ('all' in markets) or ('crypto' in markets):
+            raw_list_dict.extend(self.fh_client.general_news('crypto'))
+        if ('all' in markets) or ('merger' in markets):
+            raw_list_dict.extend(self.fh_client.general_news('merger'))
+
         for raw_dict in raw_list_dict:
             datetime_sample = None
             if sample_timestamp_rounding:
@@ -103,3 +112,16 @@ class HighFrequencyFinancials:
             temp_news_vector.append(d)
 
         return temp_news_vector, recommended_freq
+
+    def get_company_peers_news(self, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
+
+        list_of_companies = self.fh_client.company_peers(self.company)
+
+        group_sentiment = []
+        for peer_company in list_of_companies:
+            peer_sentiment, _ = self.get_company_news(peer_company,_from,_to)
+            # 
+            # #think on this one
+            # group_sentiment.append(np.mean([p['company_news_sentiment'] for p in  peer_sentiment]))
+
+        pass
