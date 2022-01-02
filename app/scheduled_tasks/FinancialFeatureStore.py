@@ -2,9 +2,12 @@ import finnhub
 import datetime
 import pandas as pd
 import numpy as np
-from app.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_keywords_similarity_with_text
+from app.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_topics_similarity_with_text
 
 API_KEY = "c6vbpq2ad3i9k7i78ehg"
+
+TOPICS = ['political inestability', 'health safety', 'economic instability', 'technological innovation', 'costs reduction', 'new investments', 'expansion and market dominance', 'legal problems', 'media scandal', 'voting rights campaing', 'climate change global warming', 'Social work healthcare covid pandemic', 'refugee crisis migration', 'racial crisis discrimination injustice', 'income gap unfair', 'gun violence stress tensions unsafe', 'hunger food insecurity famine', 'gender inequality discrimination privilege', 'Change in interest rates, monitory or fiscal policies.',
+          'Major policy changes.', 'Major government changes.', 'Storms, Hurricanes, low rains (especially for agricultural catastrofies), heat waves, wild fires', 'Earnings and profits reports.', 'Launch of new product or features.', 'Changes in management.', 'Bagging of large contracts.', 'Financial scandals, court cases, patents', 'Big news about competitors', 'incentives, credits, exports, infrastructure, tax reduction', 'lack of raw materials', 'delays in shipping, supply chain problems', 'strikes, protests, tensions', 'raw materials price increase', 'services cost increased']
 
 
 class HighFrequencyFinancials:
@@ -32,7 +35,7 @@ class HighFrequencyFinancials:
 
         return temp_dict, recommended_freq
 
-    def get_company_news(self, company=None, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
+    def get_company_news_sentiment(self, company=None, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
         '''
         This function collects company news, and it has acess to 1 year of historical data.
         '''
@@ -65,12 +68,43 @@ class HighFrequencyFinancials:
 
         return sentiment_data, recommended_freq
 
+    def get_company_news_features(self, company=None, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
+        '''
+        This function collects company news, and it has acess to 1 year of historical data.
+        '''
+        today = datetime.date.today().strftime('%Y-%m-%d')
+        yesterday = (datetime.date.today() -
+                     datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+
+        raw_list_dict = self.fh_client.company_news(
+            symbol=self.company if company is None else company,
+            _from=_from if _from else yesterday,
+            to=_to if _to else today
+        )
+
+        feature_data = []
+        for raw_dict in raw_list_dict:
+            datetime_sample = None
+            if sample_timestamp_rounding:
+                datetime_sample = pd.to_datetime(raw_dict['datetime'], unit="s")
+                datetime_sample = datetime_sample.replace(minute=datetime_sample.minute - datetime_sample.minute % 5,
+                                                          second=0, 
+                                                          microsecond=0)
+            else:
+                datetime_sample = pd.to_datetime(raw_dict['datetime'], unit="s")
+
+            features_dict = check_topics_similarity_with_text(topics=TOPICS, text=raw_dict['summary'])
+            d = {'datetime': datetime_sample, "category": raw_dict['category']}
+            d.update(features_dict)
+            feature_data.append(d)
+
+        return feature_data, recommended_freq
+
     def get_market_news(self, markets=['all'], recommended_freq='daily', sample_timestamp_rounding=True):
         '''
         This function collects company news, and it has acess to 1 year of historical data.
         '''
 
-        temp_news_vector = []
         raw_list_dict = []
         if ('all' in markets) or ('general' in markets):
             raw_list_dict.extend(self.fh_client.general_news('general'))
@@ -81,6 +115,7 @@ class HighFrequencyFinancials:
         if ('all' in markets) or ('merger' in markets):
             raw_list_dict.extend(self.fh_client.general_news('merger'))
 
+        feature_data = []
         for raw_dict in raw_list_dict:
             datetime_sample = None
             if sample_timestamp_rounding:
@@ -91,27 +126,13 @@ class HighFrequencyFinancials:
             else:
                 datetime_sample = pd.to_datetime(
                     raw_dict['datetime'], unit="s")
+            
+            features_dict = check_topics_similarity_with_text(topics=TOPICS, text=raw_dict['summary'])
+            d = {'datetime': datetime_sample, "category": raw_dict['category']}
+            d.update(features_dict)
+            feature_data.append(d)
 
-            d = {
-                "category": raw_dict['category'],
-                "datetime": datetime_sample,
-                "market_news_sentiment_political_instability": np.mean(check_keywords_similarity_with_text('political instability', raw_dict['summary'])),
-                "market_news_sentiment_health_safety": np.mean(check_keywords_similarity_with_text('health safety', raw_dict['summary'])),
-                "market_news_sentiment_economic_instability": np.mean(check_keywords_similarity_with_text('economic instability', raw_dict['summary'])),
-                "market_news_sentiment_technological_innovation": np.mean(check_keywords_similarity_with_text('technological innovation', raw_dict['summary'])),
-                "market_news_sentiment_voting_rights": np.mean(check_keywords_similarity_with_text('voting rights campaing', raw_dict['summary'])),
-                "market_news_sentiment_climate_change": np.mean(check_keywords_similarity_with_text('climate change global warming', raw_dict['summary'])),
-                "market_news_sentiment_covid": np.mean(check_keywords_similarity_with_text('Social work healthcare covid pandemic', raw_dict['summary'])),
-                "market_news_sentiment_refugee_crisis": np.mean(check_keywords_similarity_with_text('refugee crisis migration', raw_dict['summary'])),
-                "market_news_sentiment_racial_injustice": np.mean(check_keywords_similarity_with_text('racial crisis discrimination injustice', raw_dict['summary'])),
-                "market_news_sentiment_income_gap": np.mean(check_keywords_similarity_with_text('income gap unfair', raw_dict['summary'])),
-                "market_news_sentiment_gun_violence": np.mean(check_keywords_similarity_with_text('gun violence stress tensions unsafe', raw_dict['summary'])),
-                "market_news_sentiment_hunger": np.mean(check_keywords_similarity_with_text('hunger food insecurity famine', raw_dict['summary'])),
-                "market_news_sentiment_gender_inequality": np.mean(check_keywords_similarity_with_text('gender inequality discrimination privilege', raw_dict['summary']))
-            }
-            temp_news_vector.append(d)
-
-        return temp_news_vector, recommended_freq
+        return feature_data, recommended_freq
 
     def get_company_peers_news(self, _from: str = None, _to: str = None, recommended_freq='daily', sample_timestamp_rounding=True):
 
@@ -119,9 +140,6 @@ class HighFrequencyFinancials:
 
         group_sentiment = []
         for peer_company in list_of_companies:
-            peer_sentiment, _ = self.get_company_news(peer_company,_from,_to)
-            # 
-            # #think on this one
-            # group_sentiment.append(np.mean([p['company_news_sentiment'] for p in  peer_sentiment]))
+            peer_features_list, _ = self.get_company_news_features(peer_company, _from, _to)
 
         pass

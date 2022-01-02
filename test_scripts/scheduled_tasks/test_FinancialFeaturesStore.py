@@ -25,10 +25,10 @@ class TestFinancialFeaturesStore(unittest.TestCase):
         self.assertTrue(len(raw_dict) != 0)
         self.assertTrue("time_to_ipo" in raw_dict)
 
-    def test_get_company_news(self):
+    def test_get_company_news_sentiment(self):
 
         raw_list_dict = None
-        raw_list_dict, _ = self.conn.get_company_news()
+        raw_list_dict, _ = self.conn.get_company_news_sentiment()
         self.assertTrue(isinstance(raw_list_dict, list))
 
     def test_get_market_news(self):

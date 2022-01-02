@@ -21,3 +21,4 @@ jupyterlab
 finnhub-python
 flask
 spacytextblob
+sentence-transformers

@@ -2,11 +2,14 @@ import datetime
 import warnings
 import spacy
 from spacytextblob.spacytextblob import SpacyTextBlob
+from sentence_transformers import SentenceTransformer, util
+
 
 # warnings.filterwarnings("ignore", message=r"\[W008\]", category=UserWarning)
 
 nlp = spacy.load('en_core_web_lg')
 nlp.add_pipe('spacytextblob')
+STmodel = SentenceTransformer('all-MiniLM-L6-v2.mod')
 
 
 def dates_diff(date0: str, date1: str):
@@ -20,13 +23,12 @@ def check_sentiment_from_text(text: str):
     return doc._.polarity
 
 
-def check_keywords_similarity_with_text(keywords: str, text: str):
-    output = []
-    doc = nlp(text)
-    tokens = nlp(keywords)
-    if doc:
-        for token in tokens:
-            output.append(doc.similarity(token))
-    if len(output) == 0:
-        output = [0]
-    return output
+def check_topics_similarity_with_text(topics: list, text: str):
+
+    text_embeddings = STmodel.encode(text, convert_to_tensor=True)
+    topics_embeddings = STmodel.encode(topics, convert_to_tensor=True)
+
+    cosine_score = util.cos_sim(text_embeddings, topics_embeddings)
+    return {topic: score.item() for topic, score in zip(topics, cosine_score[0])}
+
+def 
