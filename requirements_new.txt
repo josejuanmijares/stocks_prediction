@@ -6,34 +6,37 @@ anyio==3.4.0
 appnope==0.1.2
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
-async-timeout==4.0.1
-attrs==21.2.0
+async-timeout==4.0.2
+attrs==21.4.0
 autopep8 @ file:///opt/conda/conda-bld/autopep8_1639166893812/work
 Babel==2.9.1
 backcall==0.2.0
 beautifulsoup4==4.10.0
 bleach==4.1.0
 blis==0.7.5
+brotlipy==0.7.0
 catalogue==2.0.6
 cchardet==2.1.7
-certifi==2020.6.20
-cffi==1.15.0
-charset-normalizer==2.0.9
+certifi==2021.10.8
+cffi @ file:///opt/concourse/worker/volumes/live/976f8942-f51d-4f0e-7352-2a10f0820d0e/volume/cffi_1625814703974/work
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
 click==8.0.3
 convertdate==2.3.2
+cryptography @ file:///opt/concourse/worker/volumes/live/a9ca20dd-e1fe-4ed3-754e-0db64082a5d2/volume/cryptography_1639414576087/work
 cycler==0.11.0
 cymem==2.0.6
 debugpy==1.5.1
 decorator==5.1.0
 defusedxml==0.7.1
-elasticsearch==7.16.1
+elasticsearch==7.16.2
 en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.2.0/en_core_web_lg-3.2.0-py3-none-any.whl
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.2.0/en_core_web_sm-3.2.0-py3-none-any.whl
 entrypoints==0.3
 fake-useragent==0.1.11
-finnhub-python==2.4.6
+filelock @ file:///tmp/build/80754af9/filelock_1638521398314/work
+finnhub-python==2.4.7
 Flask==2.0.2
-fonttools==4.28.4
+fonttools==4.28.5
 frozenlist==1.2.0
 geographiclib==1.52
 geopy==2.2.0
@@ -42,22 +45,24 @@ googletransx==2.4.2
 graphviz==0.8.4
 hijri-converter==2.2.2
 holidays==0.11.3.1
-idna==3.3
+huggingface-hub==0.0.17
+idna @ file:///tmp/build/80754af9/idna_1637925883363/work
+importlib-metadata @ file:///opt/concourse/worker/volumes/live/deb4b040-5d3d-417b-6177-7bbc888e23de/volume/importlib-metadata_1638542901294/work
 ipykernel==6.6.0
 ipython==7.30.1
 ipython-genutils==0.2.0
 itsdangerous==2.0.1
 jedi==0.18.1
 Jinja2==3.0.3
-joblib==1.1.0
+joblib @ file:///tmp/build/80754af9/joblib_1635411271373/work
 json5==0.9.6
-jsonschema==4.3.1
+jsonschema==4.3.3
 jupyter-client==7.1.0
 jupyter-core==4.9.1
 jupyter-server==1.13.1
 jupyterlab==3.2.5
 jupyterlab-pygments==0.1.2
-jupyterlab-server==2.9.0
+jupyterlab-server==2.10.2
 kiwisolver==1.3.2
 korean-lunar-calendar==0.2.1
 langcodes==3.3.0
@@ -66,9 +71,12 @@ MarkupSafe==2.0.1
 matplotlib==3.5.1
 matplotlib-inline==0.1.3
 mistune==0.8.4
+mkl-fft==1.3.1
+mkl-random @ file:///opt/concourse/worker/volumes/live/0cda23d8-7460-44b2-7e5d-3c76a8a0ca7e/volume/mkl_random_1626186083266/work
+mkl-service==2.4.0
 multidict==5.2.0
 murmurhash==1.0.6
-mxnet==1.7.0.post2
+mxnet==1.8.0.post0
 nbclassic==0.3.4
 nbclient==0.5.9
 nbconvert==6.3.0
@@ -76,8 +84,9 @@ nbformat==5.1.3
 nest-asyncio==1.5.4
 nltk==3.6.7
 notebook==6.4.6
-numpy==1.21.4
-packaging==21.3
+numpy @ file:///opt/concourse/worker/volumes/live/21fb9bb9-9731-4901-4403-2bc27cc2cc33/volume/numpy_and_numpy_base_1634106739792/work
+olefile @ file:///Users/ktietz/demo/mc3/conda-bld/olefile_1629805411829/work
+packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
 pandas==1.3.5
 pandocfilters==1.5.0
 parso==0.8.3
@@ -88,28 +97,34 @@ Pillow==8.4.0
 preshed==3.0.6
 prometheus-client==0.12.0
 prompt-toolkit==3.0.24
+protobuf==3.17.2
 ptyprocess==0.7.0
 pycares==4.1.2
 pycodestyle @ file:///tmp/build/80754af9/pycodestyle_1636635402688/work
-pycparser==2.21
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
 pydantic==1.8.2
-Pygments==2.10.0
+Pygments==2.11.1
 PyMeeus==0.5.11
-pyparsing==3.0.6
+pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1635333100036/work
+pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
 pyrsistent==0.18.0
-PySocks==1.7.1
+PySocks @ file:///opt/concourse/worker/volumes/live/112288ac-9cb0-4e73-768b-13baf4ca6419/volume/pysocks_1605305820043/work
 python-dateutil==2.8.2
 python-socks==2.0.1
 pytz==2021.3
+PyYAML==6.0
 pyzmq==22.3.0
-regex==2021.11.10
-requests==2.26.0
+regex @ file:///opt/concourse/worker/volumes/live/6d0c2188-eef5-45ba-7cde-604a70bbd9f2/volume/regex_1628063357190/work
+requests @ file:///tmp/build/80754af9/requests_1629994808627/work
+sacremoses==0.0.43
 schedule==1.1.0
-scikit-learn==1.0.1
+scikit-learn==1.0.2
 scipy==1.7.3
 seaborn==0.11.2
 Send2Trash==1.8.0
-six==1.16.0
+sentence-transformers==2.1.0
+sentencepiece==0.1.96
+six @ file:///tmp/build/80754af9/six_1623709665295/work
 smart-open==5.2.1
 sniffio==1.2.0
 snscrape @ git+https://github.com/JustAnotherArchivist/snscrape.git@eee06d859338b184fc43f93e424ba70a0e9f4679
@@ -124,14 +139,19 @@ testpath==0.5.0
 textblob==0.15.3
 thinc==8.0.13
 threadpoolctl==3.0.0
+tokenizers @ file:///opt/concourse/worker/volumes/live/6e032651-7ef8-4dd6-578d-999d6a75816e/volume/tokenizers_1639607840240/work
 toml @ file:///tmp/build/80754af9/toml_1616166611790/work
 toolz==0.11.2
+torch==1.10.1
+torchaudio==0.10.1
+torchvision==0.11.2
 tornado==6.1
-tqdm==4.62.3
+tqdm @ file:///tmp/build/80754af9/tqdm_1635330843403/work
 traitlets==5.1.1
+transformers==4.11.3
 twint==2.1.20
 typer==0.4.0
-typing-extensions==3.10.0.2
+typing-extensions @ file:///tmp/build/80754af9/typing_extensions_1631814937681/work
 urllib3==1.26.7
 wasabi==0.9.0
 wcwidth==0.2.5
@@ -139,3 +159,4 @@ webencodings==0.5.1
 websocket-client==1.2.3
 Werkzeug==2.0.2
 yarl==1.7.2
+zipp @ file:///tmp/build/80754af9/zipp_1633618647012/work
