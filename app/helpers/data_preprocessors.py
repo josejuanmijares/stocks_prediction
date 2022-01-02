@@ -31,4 +31,6 @@ def check_topics_similarity_with_text(topics: list, text: str):
     cosine_score = util.cos_sim(text_embeddings, topics_embeddings)
     return {topic: score.item() for topic, score in zip(topics, cosine_score[0])}
 
-def 
+
+def calculate_feature_distribution(feature_vector, model='gaussian'):
+    pass
