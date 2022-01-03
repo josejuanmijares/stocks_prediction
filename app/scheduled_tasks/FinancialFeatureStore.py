@@ -1,13 +1,13 @@
 import finnhub
 import datetime
+from numpy.lib.arraysetops import isin
 import pandas as pd
 import numpy as np
-from app.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_topics_similarity_with_text
+from app.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_topics_similarity_with_text, calculate_feature_distribution
 
 API_KEY = "c6vbpq2ad3i9k7i78ehg"
 
-TOPICS = ['political inestability', 'health safety', 'economic instability', 'technological innovation', 'costs reduction', 'new investments', 'expansion and market dominance', 'legal problems', 'media scandal', 'voting rights campaing', 'climate change global warming', 'Social work healthcare covid pandemic', 'refugee crisis migration', 'racial crisis discrimination injustice', 'income gap unfair', 'gun violence stress tensions unsafe', 'hunger food insecurity famine', 'gender inequality discrimination privilege', 'Change in interest rates, monitory or fiscal policies.',
-          'Major policy changes.', 'Major government changes.', 'Storms, Hurricanes, low rains (especially for agricultural catastrofies), heat waves, wild fires', 'Earnings and profits reports.', 'Launch of new product or features.', 'Changes in management.', 'Bagging of large contracts.', 'Financial scandals, court cases, patents', 'Big news about competitors', 'incentives, credits, exports, infrastructure, tax reduction', 'lack of raw materials', 'delays in shipping, supply chain problems', 'strikes, protests, tensions', 'raw materials price increase', 'services cost increased']
+TOPICS = ['political inestability', 'health safety', 'economic instability', 'technological innovation', 'costs reduction', 'new investments', 'expansion and market dominance', 'legal problems', 'media scandal', 'voting rights campaing', 'climate change global warming', 'Social work healthcare covid pandemic', 'refugee crisis migration', 'racial crisis discrimination injustice', 'income gap unfair', 'gun violence stress tensions unsafe', 'hunger food insecurity famine', 'gender inequality discrimination privilege', 'Change in interest rates, monitory or fiscal policies.', 'Major policy changes.', 'Major government changes.', 'Storms, Hurricanes, low rains (especially for agricultural catastrofies), heat waves, wild fires', 'Earnings and profits reports.', 'Launch of new product or features.', 'Changes in management.', 'Bagging of large contracts.', 'Financial scandals, court cases, patents', 'Big news about competitors', 'incentives, credits, exports, infrastructure, tax reduction', 'lack of raw materials', 'delays in shipping, supply chain problems', 'strikes, protests, tensions', 'raw materials price increase', 'services cost increased']
 
 
 class HighFrequencyFinancials:
@@ -138,8 +138,21 @@ class HighFrequencyFinancials:
 
         list_of_companies = self.fh_client.company_peers(self.company)
 
-        group_sentiment = []
+        group_features_data = []
         for peer_company in list_of_companies:
             peer_features_list, _ = self.get_company_news_features(peer_company, _from, _to)
-
-        pass
+            group_features_data.append(peer_features_list)
+        
+        return group_features_data, recommended_freq
+    
+    def transform_feature_data_to_statistics(self, feature_data, group_summary=False):
+        statistics = None
+        if isinstance(feature_data, list):
+            if len(feature_data) > 0:
+                if isinstance(feature_data[0], dict): 
+                    statistics = [calculate_feature_distribution(feature_data)]
+                elif isinstance(feature_data[0], list) and not group_summary: 
+                    statistics = [calculate_feature_distribution(f) for f in feature_data]
+                elif isinstance(feature_data[0], list) and group_summary: 
+                    statistics = [calculate_feature_distribution([fi for f in feature_data for fi in f])]
+        return statistics
