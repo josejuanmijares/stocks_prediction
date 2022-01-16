@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer, util
 
 nlp = spacy.load('en_core_web_lg')
 nlp.add_pipe('spacytextblob')
-STmodel = SentenceTransformer('all-MiniLM-L6-v2.mod')
+STmodel = SentenceTransformer('src/all-MiniLM-L6-v2.mod')
 
 
 def dates_diff(date0: str, date1: str):
@@ -33,9 +33,10 @@ def check_topics_similarity_with_text(topics: list, text: str):
     cosine_score = util.cos_sim(text_embeddings, topics_embeddings)
     return {topic: score.item() for topic, score in zip(topics, cosine_score[0])}
 
-def get_statistics(vector:list=None, categorical=False):
+
+def get_statistics(vector: list = None, categorical=False):
     o = {}
-    if vector and not categorical:    
+    if vector and not categorical:
         o['mean'] = np.mean(vector)
         o['median'] = np.median(vector)
         o['stdev'] = np.std(vector)
@@ -52,23 +53,26 @@ def get_statistics(vector:list=None, categorical=False):
 
     return o
 
-def calculate_feature_distribution(features_timeseries_list:list=None):
-    o={}
+
+def calculate_feature_distribution(features_timeseries_list: list = None):
+    o = {}
     if features_timeseries_list:
         features_keys = features_timeseries_list[0].keys()
         for feature_key in features_keys:
-            feature_vector = [sample[feature_key] for sample in features_timeseries_list]
+            feature_vector = [sample[feature_key]
+                              for sample in features_timeseries_list]
             if 'datetime' == feature_key:
                 d0 = min(feature_vector)
-                minutes_datetime_vector = [(d1-d0).total_seconds()/60 for d1 in feature_vector]
+                minutes_datetime_vector = [
+                    (d1-d0).total_seconds()/60 for d1 in feature_vector]
                 days_datetime_vector = [(d1-d0).days for d1 in feature_vector]
 
                 o['minutes_datetime'] = get_statistics(minutes_datetime_vector)
                 o['days_datetime'] = get_statistics(days_datetime_vector)
 
             elif 'category' == feature_key:
-                o['category'] = get_statistics(feature_vector,categorical=True)
+                o['category'] = get_statistics(
+                    feature_vector, categorical=True)
             else:
                 o[feature_key] = get_statistics(feature_vector)
     return o
-

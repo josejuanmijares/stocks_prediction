@@ -6,4 +6,4 @@ pip install git+https://github.com/JustAnotherArchivist/snscrape.git
 pip install -U spacy
 python -m spacy download en_core_web_sm
 python -m spacy download en_core_web_lg
-python -c "from sentence_transformers import SentenceTransformer; model = SentenceTransformer('all-MiniLM-L6-v2'); model.save('all-MiniLM-L6-v2.mod');"
+python -c "from sentence_transformers import SentenceTransformer; model = SentenceTransformer('all-MiniLM-L6-v2'); model.save('src/all-MiniLM-L6-v2.mod');"

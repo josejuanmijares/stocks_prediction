@@ -1,7 +1,8 @@
 import unittest
 import finnhub
-from app.scheduled_tasks.FinancialFeatureStore import HighFrequencyFinancials
 import warnings
+
+from src.scheduled_tasks.FinancialFeatureStore import HighFrequencyFinancials
 
 
 class TestFinancialFeaturesStore(unittest.TestCase):
@@ -43,18 +44,18 @@ class TestFinancialFeaturesStore(unittest.TestCase):
         raw_list_dict, _ = self.conn.get_company_news_features()
         self.assertTrue(isinstance(raw_list_dict, list))
 
-    
     def test_get_company_peers_news(self):
 
         raw_list_dict = []
         raw_list_dict, _ = self.conn.get_company_peers_news()
         self.assertTrue(isinstance(raw_list_dict, list))
 
-    
     def test_transform_feature_data_to_statistics(self):
         raw_list_dict = []
-        raw_list_dict, _ = self.conn.get_company_news_features(_from='2021-12-01',_to='2021-12-10')
-        raw_list = self.conn.transform_feature_data_to_statistics(raw_list_dict)
+        raw_list_dict, _ = self.conn.get_company_news_features(
+            _from='2021-12-01', _to='2021-12-10')
+        raw_list = self.conn.transform_feature_data_to_statistics(
+            raw_list_dict)
         self.assertTrue(isinstance(raw_list, list))
         self.assertTrue(isinstance(raw_list[0], dict))
 

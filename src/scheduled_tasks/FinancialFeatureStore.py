@@ -3,7 +3,7 @@ import datetime
 from numpy.lib.arraysetops import isin
 import pandas as pd
 import numpy as np
-from app.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_topics_similarity_with_text, calculate_feature_distribution
+from src.helpers.data_preprocessors import dates_diff, check_sentiment_from_text, check_topics_similarity_with_text, calculate_feature_distribution
 
 API_KEY = "c6vbpq2ad3i9k7i78ehg"
 
