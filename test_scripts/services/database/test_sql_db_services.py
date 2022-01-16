@@ -47,6 +47,12 @@ class TestMyFlatTable(unittest.TestCase):
             x = list(res)
             self.assertTrue(x[0][0] == 0)
 
+    def test_MTF_read(self):
+        pass
+
+    def test_MTF_write_from_dataframe(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
