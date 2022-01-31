@@ -29,14 +29,14 @@ class MyFlatTable():
             cur.execute(delete_query_str)
 
     def read(self, query):
-        df = pd.Dataframe({})
+        df = pd.DataFrame({})
         if len(query):
             with self.connect() as f:
                 df = pd.read_sql_query(query, f)
         return df
 
     def write_from_dataframe(self, df=None, table_name=None):
-        if df and table_name:
+        if not(df is None) and not(table_name is None):
             with self.connect() as f:
                 cur = f.cursor()
                 df.to_sql(table_name, f, if_exists='append', index=False)

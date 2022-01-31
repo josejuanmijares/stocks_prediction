@@ -1,7 +1,8 @@
 import unittest
 import sqlite3
-from src.services.database.sql_db_services import MyFlatTable
 import warnings
+import pandas as pd
+from src.services.database.sql_db_services import MyFlatTable
 
 
 class TestMyFlatTable(unittest.TestCase):
@@ -35,9 +36,8 @@ class TestMyFlatTable(unittest.TestCase):
             self.assertTrue(len(names) == 2)
 
     def test_MFT_delete_table_for_company(self):
-        self.obj.create_table_for_company(
-            company_name='AAP',
-            fields=['field1', 'field2'])
+        self.obj.create_table_for_company(company_name='AAP',
+                                          fields=['field1', 'field2'])
         self.obj.delete_table_for_company(company_name='AAP')
 
         with self.obj.connect() as f:
@@ -47,11 +47,26 @@ class TestMyFlatTable(unittest.TestCase):
             x = list(res)
             self.assertTrue(x[0][0] == 0)
 
-    def test_MTF_read(self):
-        pass
-
     def test_MTF_write_from_dataframe(self):
-        pass
+        self.obj.create_table_for_company(company_name='AAP',
+                                          fields=['field1', 'field2'])
+        df = pd.DataFrame({'field1': [1, 2, 3], 'field2': [1, 2, 3]})
+        self.obj.write_from_dataframe(df=df, table_name='AAP')
+        query = '''SELECT * FROM "AAP";'''
+        temp = self.obj.read(query=query)
+        self.obj.delete_table_for_company(company_name='AAP')
+        self.assertTrue(temp.shape == (3, 2))
+
+    def test_MTF_read(self):
+        self.obj.create_table_for_company(company_name='AAP',
+                                          fields=['field1', 'field2'])
+        df = pd.DataFrame({'field1': [1, 2, 3], 'field2': [1, 2, 3]})
+        self.obj.write_from_dataframe(df=df, table_name='AAP')
+        query = '''SELECT * FROM "AAP";'''
+        temp = self.obj.read(query=query)
+        self.obj.delete_table_for_company(company_name='AAP')
+        self.assertTrue(temp.shape==(3,2))
+        
 
 
 if __name__ == '__main__':
